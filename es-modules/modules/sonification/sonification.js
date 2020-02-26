@@ -1,6 +1,6 @@
 /* *
  *
- *  (c) 2009-2019 Øystein Moseng
+ *  (c) 2009-2020 Øystein Moseng
  *
  *  Sonification module for Highcharts
  *
@@ -11,9 +11,9 @@
  * */
 'use strict';
 import H from '../../parts/Globals.js';
-var addEvent = H.addEvent;
+import Point from '../../parts/Point.js';
 import U from '../../parts/Utilities.js';
-var extend = U.extend;
+var addEvent = U.addEvent, extend = U.extend;
 import Instrument from './Instrument.js';
 import instruments from './instrumentDefinitions.js';
 import Earcon from './Earcon.js';
@@ -88,8 +88,8 @@ H.sonification = {
     Timeline: TimelineClasses.Timeline
 };
 // Chart specific
-H.Point.prototype.sonify = pointSonifyFunctions.pointSonify;
-H.Point.prototype.cancelSonify = pointSonifyFunctions.pointCancelSonify;
+Point.prototype.sonify = pointSonifyFunctions.pointSonify;
+Point.prototype.cancelSonify = pointSonifyFunctions.pointCancelSonify;
 H.Series.prototype.sonify = chartSonifyFunctions.seriesSonify;
 extend(H.Chart.prototype, {
     sonify: chartSonifyFunctions.chartSonify,

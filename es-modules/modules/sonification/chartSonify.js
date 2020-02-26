@@ -1,6 +1,6 @@
 /* *
  *
- *  (c) 2009-2019 Øystein Moseng
+ *  (c) 2009-2020 Øystein Moseng
  *
  *  Sonification functions for chart/series.
  *
@@ -93,8 +93,10 @@ import H from '../../parts/Globals.js';
 * @name Highcharts.SonifySeriesOptionsObject#onEnd
 * @type {Function|undefined}
 */
+''; // detach doclets above
+import Point from '../../parts/Point.js';
 import U from '../../parts/Utilities.js';
-var isArray = U.isArray, pick = U.pick, splat = U.splat;
+var find = U.find, isArray = U.isArray, merge = U.merge, pick = U.pick, splat = U.splat;
 import utilities from './utilities.js';
 /**
  * Get the relative time value of a point.
@@ -158,7 +160,7 @@ function getExtremesForInstrumentProps(chart, instruments, dataExtremes) {
             }
         });
         return newExtremes;
-    }, H.merge(dataExtremes));
+    }, merge(dataExtremes));
 }
 /**
  * Get earcons for the point if there are any.
@@ -207,7 +209,7 @@ function makeInstrumentCopies(instruments) {
         var instrument = instrumentDef.instrument, copy = (typeof instrument === 'string' ?
             H.sonification.instruments[instrument] :
             instrument).copy();
-        return H.merge(instrumentDef, { instrument: copy });
+        return merge(instrumentDef, { instrument: copy });
     });
 }
 /**
@@ -267,7 +269,7 @@ function buildTimelinePathFromSeries(series, options) {
         },
         onEventStart: function (event) {
             var eventObject = event.options && event.options.eventObject;
-            if (eventObject instanceof H.Point) {
+            if (eventObject instanceof Point) {
                 // Check for hidden series
                 if (!eventObject.series.visible &&
                     !eventObject.series.chart.series.some(function (series) {
@@ -287,7 +289,7 @@ function buildTimelinePathFromSeries(series, options) {
         onEventEnd: function (eventData) {
             var eventObject = eventData.event && eventData.event.options &&
                 eventData.event.options.eventObject;
-            if (eventObject instanceof H.Point && options.onPointEnd) {
+            if (eventObject instanceof Point && options.onPointEnd) {
                 options.onPointEnd(eventData.event, eventObject);
             }
         },
@@ -348,7 +350,7 @@ function seriesSonify(options) {
  */
 function buildSeriesOptions(series, dataExtremes, chartSonifyOptions) {
     var seriesOptions = chartSonifyOptions.seriesOptions || {};
-    return H.merge({
+    return merge({
         // Calculated dataExtremes for chart
         dataExtremes: dataExtremes,
         // We need to get timeExtremes for each series. We pass this
@@ -362,7 +364,7 @@ function buildSeriesOptions(series, dataExtremes, chartSonifyOptions) {
         earcons: chartSonifyOptions.earcons
     }, 
     // Merge in the specific series options by ID
-    isArray(seriesOptions) ? (H.find(seriesOptions, function (optEntry) {
+    isArray(seriesOptions) ? (find(seriesOptions, function (optEntry) {
         return optEntry.id === pick(series.id, series.options.id);
     }) || {}) : seriesOptions, {
         // Forced options
@@ -765,7 +767,7 @@ function getCurrentPoints() {
             return cursorObj[path].eventObject;
         }).filter(function (eventObj) {
             // Return the events that are points
-            return eventObj instanceof H.Point;
+            return eventObj instanceof Point;
         });
     }
     return [];
